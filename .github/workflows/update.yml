@@ -22,7 +22,7 @@ jobs:
           curl -s https://raw.githubusercontent.com/vfarid/cf-clean-ips/main/list.txt \
           | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' \
           | sort -u \
-          | shuf -n 30 > ip.txt
+          | shuf -n 100 > ip.txt
 
       # ✅ 转 JSON
       - name: Convert to JSON
