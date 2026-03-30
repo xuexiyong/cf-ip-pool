@@ -13,22 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Fetch IPs
+      # ✅ 获取并清洗 IP
+      - name: Fetch and Clean IPs
         run: |
-          curl -s https://raw.githubusercontent.com/vfarid/cf-clean-ips/main/list.txt | shuf -n 100 > ip.txt
+          curl -s 你的IP源地址 \
+          | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' \
+          | sort -u \
+          | shuf -n 30 > ip.txt
 
-      - name: Convert JSON
+      # ✅ 转 JSON
+      - name: Convert to JSON
         run: |
           echo "[" > ip.json
           awk '{printf "\"%s\",\n", $0}' ip.txt | sed '$ s/,$//' >> ip.json
           echo "]" >> ip.json
 
-      - name: Commit
+      # ✅ 提交
+      - name: Commit & Push
         run: |
           git config --global user.name "bot"
           git config --global user.email "bot@example.com"
           git add ip.json
-          git commit -m "update" || echo "no change"
+          git commit -m "update ip pool" || echo "no changes"
           git push
