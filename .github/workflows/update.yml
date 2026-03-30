@@ -17,7 +17,7 @@ jobs:
 
       - name: Fetch IPs
         run: |
-          curl -s https://raw.githubusercontent.com/XIU2/CloudflareSpeedTest/master/ip.txt | shuf -n 100 > ip.txt
+          curl -s https://raw.githubusercontent.com/vfarid/cf-clean-ips/main/list.txt | shuf -n 100 > ip.txt
 
       - name: Convert JSON
         run: |
