@@ -1,0 +1,31 @@
+name: Update CF IP Pool
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fetch IPs
+        run: |
+          curl -s https://raw.githubusercontent.com/XIU2/CloudflareSpeedTest/master/ip.txt | shuf -n 100 > ip.txt
+
+      - name: Convert JSON
+        run: |
+          echo "[" > ip.json
+          awk '{printf "\"%s\",\n", $0}' ip.txt | sed '$ s/,$//' >> ip.json
+          echo "]" >> ip.json
+
+      - name: Commit
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@example.com"
+          git add ip.json
+          git commit -m "update" || echo "no change"
+          git push
